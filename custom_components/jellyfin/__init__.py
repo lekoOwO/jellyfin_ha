@@ -1155,7 +1155,7 @@ class JellyfinClientManager(object):
         if item["BackdropImageTags"]:
             return self.get_artwork_url(item["Id"], "Backdrop")
         else:
-            return self.jf_client.jellyfin.artwork(item["ParentBackdropItemId"], "Backdrop")
+            return self.jf_client.jellyfin.artwork(item["ParentBackdropItemId"], "Backdrop", 500)
 
     async def get_play_info(self, media_id, profile):
         return await self.hass.async_add_executor_job(self.jf_client.jellyfin.get_play_info, media_id, profile)
