@@ -460,6 +460,12 @@ class JellyfinDevice(object):
     def get_artwork_url(self, media_id, type="Primary") -> str:
         return self.jf_manager.get_artwork_url(media_id, type)
 
+    def get_backdrop_url(self, item) -> str:
+        if item["BackdropImageTags"]:
+            return self.get_artwork_url(item["Id"], "Backdrop")
+        else:
+            return self.jf_manager.get_artwork_url(item["ParentBackdropItemId"], "Backdrop")
+
     async def set_playstate(self, state, pos=0):
         """ Send media commands to server. """
         params = {}
@@ -879,7 +885,7 @@ class JellyfinClientManager(object):
                 "studio": ",".join(o["Name"] for o in item["Studios"]),
                 "release": dt.parse(item["PremiereDate"]).__format__("%d/%m/%Y") if "PremiereDate" in item else None,
                 "poster": self.get_artwork_url(item["Id"]),
-                "fanart": self.get_artwork_url(item["Id"], "Backdrop"),
+                "fanart": self.get_backdrop_url(item),
                 "genres": ",".join(item["Genres"]),
                 "rating": None,
                 "stream_url": None,
@@ -940,7 +946,7 @@ class JellyfinClientManager(object):
                     "studio": ",".join(o["Name"] for o in item["Studios"]),
                     "release": dt.parse(item["PremiereDate"]).__format__("%Y") if "PremiereDate" in item else None,
                     "poster": self.get_artwork_url(item["Id"]),
-                    "fanart": self.get_artwork_url(item["Id"], "Backdrop"),
+                    "fanart": self.get_backdrop_url(item),
                     "genres": ",".join(item["Genres"]),
                     "progress": progress,
                     "rating": rating,
@@ -965,7 +971,7 @@ class JellyfinClientManager(object):
                     "studio": ",".join(o["Name"] for o in item["Studios"]),
                     "release": dt.parse(item["PremiereDate"]).__format__("%d/%m/%Y") if "PremiereDate" in item else None,
                     "poster": self.get_artwork_url(item["Id"]),
-                    "fanart": self.get_artwork_url(item["Id"], "Backdrop"),
+                    "fanart": self.get_backdrop_url(item),
                     "genres": ",".join(item["Genres"]),
                     "progress": progress,
                     "rating": rating,
